@@ -24,22 +24,19 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18.17.0'  # Updated to match Next.js requirements
+          node-version: '18.17.0'  # Ensure this matches your Next.js requirements
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci  # Using npm ci to install dependencies for faster, more reliable builds
+        run: npm ci  # Use 'npm ci' to install dependencies for consistent builds
 
       - name: Build with Next.js
-        run: npm run build
-
-      - name: Export with Next.js
-        run: npm run export  # Ensure this command is set up in your package.json
+        run: npm run build  # This will automatically handle the static export if configured in next.config.js
 
       - name: Upload artifact for deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out
+          path: ./out  # Ensure this is where your Next.js outputs the static files (usually 'out' by default)
 
   deploy:
     needs: build
