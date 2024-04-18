@@ -18,7 +18,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -28,22 +28,28 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci  # Use 'npm ci' to install dependencies for consistent builds
+        run: npm ci  # Use 'npm ci' for faster, more reliable builds
 
       - name: Build with Next.js
-        run: npm run build  # This will automatically handle the static export if configured in next.config.js
+        run: npm run build  # This will also handle the export if 'output: export' is set in next.config.js
 
-      - name: Upload artifact for deployment
-        uses: actions/upload-pages-artifact@v3
+      - name: Upload build output as artifact
+        uses: actions/upload-artifact@v2
         with:
-          path: ./out  # Ensure this is where your Next.js outputs the static files (usually 'out' by default)
+          name: nextjs-build
+          path: ./out  # Ensure this matches the output directory specified in next.config.js
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: nextjs-build
+
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
         with:
-          branch: prod  # Target branch for deployment
-          path: ./out  # Directory containing the static site output
+          token: ${{ secrets.GITHUB_TOKEN }}  # Uses the built-in GITHUB_TOKEN for authentication
+          preview: false  # Indicates this is a production deployment
