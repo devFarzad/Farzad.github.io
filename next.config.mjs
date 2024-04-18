@@ -1,14 +1,7 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+// next.config.mjs
+export default {
     output: 'export',
     trailingSlash: true,
-};
-
-export default nextConfig;
-// const isProd = process.env.NODE_ENV === 'production';
-
-// export default {
-//     output: 'export',
-//     trailingSlash: true,
-//   };
+    // any other configurations you need
+  };
   
