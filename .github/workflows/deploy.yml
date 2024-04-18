@@ -1,0 +1,23 @@
+name: Build and Deploy Next.js Site
+
+on:
+  push:
+    branches:
+      - main  # Adjust this as needed for your workflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # Match this with your project's Node.js version
+      - run: npm install
+      - run: npm run build
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: prod  # Adjust this to the branch you use for GitHub Pages
+          publish_dir: './out'  # Make sure this matches your output directory
+          keep_files: false  # Set to true to keep previous files
