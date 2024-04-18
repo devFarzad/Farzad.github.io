@@ -1,23 +1,29 @@
-name: Build and Deploy Next.js Site
+name: Deploy Next.js Site to GitHub Pages
 
 on:
   push:
     branches:
-      - main  # Adjust this as needed for your workflow
+      - main  # or whichever branch should trigger the deployment
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
-          node-version: '16'  # Match this with your project's Node.js version
-      - run: npm install
-      - run: npm run build
-      - uses: peaceiris/actions-gh-pages@v3
+          node-version: '14'  # Ensure this matches the version you use locally
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build and export
+        run: npm run build  # This should create the `out` folder
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: prod  # Adjust this to the branch you use for GitHub Pages
-          publish_dir: './out'  # Make sure this matches your output directory
-          keep_files: false  # Set to true to keep previous files
+          publish_branch: prod  # Branch to deploy to
+          publish_dir: ./out  # Directory to deploy from
+          keep_files: false  # Set to true if you want to keep previous builds
